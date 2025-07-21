@@ -31,3 +31,6 @@ def upload():
 def docs():
     files = get_uploaded_docs()
     return render_template('docs.html', files=files)
+
+if __name__ == "__main__":
+   app.run(debug=True, port=5001)
