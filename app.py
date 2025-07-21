@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, redirect, url_for
 from qa_logic import process_file, answer_query, load_index, get_uploaded_docs
-
+import logging
+logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
 load_index()
 
@@ -9,9 +10,16 @@ load_index()
 def home():
     return render_template('index.html')
 
+
+
 @app.route('/ask', methods=['POST'])
 def ask():
-    query = request.form.get('question')
+    query = request.form.get('query')  # not 'question'
+    answer = answer_query(query)
+
+    if not query or query.strip() == "":
+        return render_template('index.html', answer="Please enter a valid query.")
+
     answer = answer_query(query)
     return render_template('index.html', answer=answer)
 
