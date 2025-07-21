@@ -1,15 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>View Uploaded Documents</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='view.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     <link rel="shortcut icon" href="{{ url_for('static', filename='img/icons.png')}}" type="image/x-icon">
 </head>
 <body>
-    <h1>Uploaded Internal Documents</h1>
-    {% for file in files %}
-        <h3>{{ file.name }}</h3>
-        <pre style="background-color:#f3f3f3; padding:10px;">{{ file.content }}</pre>
-        <hr>
-    {% endfor %}
-    <p><a href="/">Back to Q&A</a> | <a href="/upload">Upload More</a></p>
+      <nav class="navbar">
+    <div class="project-title">DocQ-AI</div>
+    <div class="nav-links">
+        <a href="/" class="nav-link">Chat</a>
+        <a href="/upload" class="nav-link">Upload</a>
+        <a href="/docs" class="nav-link">Documents</a>
+       
+    </div>
+</nav>
+    <div class="main-container">
+        <div class="header">
+            <img src="{{ url_for('static', filename='img/uploaded.png') }}" alt="Uploaded Icon" class="icon">
+            <h1>Uploaded Internal Documents</h1>
+        </div>
+
+        <div class="documents-list">
+            {% for file in files %}
+                <div class="doc-box">
+                    <h3>{{ file.name }}</h3>
+                    <pre>{{ file.content }}</pre>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="bottom-buttons">
+            <a href="/" class="nav-btn"><i class="fas fa-arrow-left"></i> Back to Q&A</a>
+            <a href="/upload" class="upload-more-btn"><i class="fas fa-upload"></i> Upload More</a>
+        </div>
+    </div>
 </body>
 </html>

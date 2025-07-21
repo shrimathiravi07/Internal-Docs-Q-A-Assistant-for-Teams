@@ -1,17 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Q&A Assistant</title>
+    <meta charset="UTF-8">
+    <title>Internal Docs Q&A Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+   <link rel="shortcut icon" href="{{ url_for('static', filename='img/icons.png')}}" type="image/x-icon">
 </head>
 <body>
-    <h1>Ask a Question</h1>
-    <form method="POST" action="/ask">
-        <input type="text" name="question" placeholder="Type your question..." required>
-        <button type="submit">Ask</button>
-    </form>
-    {% if answer %}
-        <p><strong>Answer:</strong> {{ answer }}</p>
-    {% endif %}
-    <p><a href="/upload">Upload Documents</a> | <a href="/docs">View Documents</a></p>
+    <nav class="navbar">
+    <div class="project-title">DocQ-AI</div>
+    <div class="nav-links">
+        <a href="/" class="nav-link">Chat</a>
+        <a href="/upload" class="nav-link">Upload</a>
+        <a href="/docs" class="nav-link">Documents</a>
+       
+    </div>
+</nav>
+
+    <div class="main-layout">
+        <div class="left-image">
+            <img src="{{ url_for('static', filename='img/main_photot.webp') }}" alt="Team Working">
+        </div>
+        <div class="right-container">
+            <h1>Ask Your Question</h1>
+            <form method="POST" action="/ask">
+                <center><input type="text" name="query" class="query-input" placeholder="Type your question here..." required>
+                <button type="submit" class="ask-btn"><i class="fas fa-paper-plane"></i> Ask</button></center>
+            </form>
+            <div class="nav-buttons">
+                <a href="/upload" class="nav-btn">Upload Documents</a>
+                <a href="/docs" class="nav-btn">View Documents</a>
+            </div>
+            {% if answer %}
+            <div class="answer-box">
+                <h3><i class="fas fa-lightbulb"></i> Answer</h3>
+                <p>{{ answer }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </body>
 </html>

@@ -1,17 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Upload Documents</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='upload.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+ <link rel="shortcut icon" href="{{ url_for('static', filename='img/icons.png')}}" type="image/x-icon">
 </head>
 <body>
-    <h1>Upload Internal Documents</h1>
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="file" required>
-        <button type="submit">Upload</button>
-    </form>
-    {% if message %}
-        <p><strong>{{ message }}</strong></p>
-    {% endif %}
-    <p><a href="/">Back to Q&A</a> | <a href="/docs">View Documents</a></p>
+        <nav class="navbar">
+    <div class="project-title">DocQ-AI</div>
+    <div class="nav-links">
+        <a href="/" class="nav-link">Chat</a>
+        <a href="/upload" class="nav-link">Upload</a>
+        <a href="/docs" class="nav-link">Documents</a>
+       
+    </div>
+</nav>
+    <div class="main-container">
+        <h1>Upload Internal Documents</h1>
+        <br>
+        <br>
+       <center> <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" required>
+            <button type="submit">Upload</button>
+        </form></center>
+        <br>
+        <br>
+        {% if message %}
+            <p><strong>{{ message }}</strong></p>
+        {% endif %}
+        <div class="upload-links">
+            <a href="/" class="nav-btn"><i class="fas fa-arrow-left"></i> Back to Q&A</a>
+            <a href="/docs" class="nav-btn"><i class="fas fa-folder-open"></i> View Documents</a>
+        </div>
+    </div>
 </body>
+
 </html>
