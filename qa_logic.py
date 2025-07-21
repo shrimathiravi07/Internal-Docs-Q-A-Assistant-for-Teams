@@ -1,49 +1,59 @@
 import os
-from langchain.vectorstores import FAISS
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.document_loaders import TextLoader
-from langchain.chains.question_answering import load_qa_chain
-from langchain.llms import OpenAI
-from dotenv import load_dotenv
+import faiss
+import numpy as np
+from sentence_transformers import SentenceTransformer
+from transformers import pipeline
+import pickle
 
-load_dotenv()
+DATA_DIR = "data"
+INDEX_DIR = "index"
+os.makedirs(DATA_DIR, exist_ok=True)
+os.makedirs(INDEX_DIR, exist_ok=True)
 
-DATA_PATH = "documents/"
-INDEX_PATH = "embeddings_store/"
+model = SentenceTransformer("all-MiniLM-L6-v2")
+qa_model = pipeline("text2text-generation", model="google/flan-t5-base")
+index_file = os.path.join(INDEX_DIR, "faiss.index")
+text_data_file = os.path.join(INDEX_DIR, "texts.pkl")
 
-os.makedirs(DATA_PATH, exist_ok=True)
-os.makedirs(INDEX_PATH, exist_ok=True)
-
-embedding = OpenAIEmbeddings()
+texts = []
+index = None
 
 def load_index():
-    if os.path.exists(os.path.join(INDEX_PATH, "index.faiss")):
-        return FAISS.load_local(INDEX_PATH, embedding)
+    global index, texts
+    if os.path.exists(index_file):
+        index = faiss.read_index(index_file)
+        with open(text_data_file, "rb") as f:
+            texts = pickle.load(f)
     else:
-        return None
+        index = faiss.IndexFlatL2(384)  # 384 = dim of all-MiniLM-L6-v2
 
-def create_index():
-    docs = []
-    for file in os.listdir(DATA_PATH):
-        if file.endswith(".txt"):
-            loader = TextLoader(os.path.join(DATA_PATH, file))
-            data = loader.load()
-            splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
-            docs.extend(splitter.split_documents(data))
-    return FAISS.from_documents(docs, embedding)
+def save_index():
+    faiss.write_index(index, index_file)
+    with open(text_data_file, "wb") as f:
+        pickle.dump(texts, f)
 
-def save_document(file):
-    path = os.path.join(DATA_PATH, file.filename)
-    file.save(path)
-    # Recreate index after new upload
-    index = create_index()
-    index.save_local(INDEX_PATH)
+def process_file(text):
+    global index, texts
+    sentences = text.split("\n")
+    embeddings = model.encode(sentences)
+    index.add(np.array(embeddings).astype("float32"))
+    texts.extend(sentences)
+    save_index()
 
-def process_question(question):
-    index = load_index()
-    if index is None:
-        return "No documents found. Please upload documents first."
-    docs = index.similarity_search(question)
-    chain = load_qa_chain(OpenAI(), chain_type="stuff")
-    return chain.run(input_documents=docs, question=question)
+def answer_query(query):
+    global index, texts
+    query_embedding = model.encode([query])
+    D, I = index.search(np.array(query_embedding).astype("float32"), k=5)
+    context = " ".join([texts[i] for i in I[0]])
+    prompt = f"Context: {context}\n\nQuestion: {query}\nAnswer:"
+    answer = qa_model(prompt, max_length=100, do_sample=False)[0]['generated_text']
+    return answer.strip()
+def get_uploaded_docs():
+    files = []
+    for f in os.listdir(DATA_DIR):
+        if f.endswith(".txt"):
+            with open(os.path.join(DATA_DIR, f), 'r', encoding='utf-8') as file:
+                content = file.read()
+                files.append({"name": f, "content": content})
+    return files
+
