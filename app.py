@@ -1,24 +1,32 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-from qa_logic import process_question, save_document
+from flask import Flask, request, render_template, redirect, url_for
+from qa_logic import process_file, answer_query, load_index, get_uploaded_docs
 
 app = Flask(__name__)
-CORS(app)
+load_index()
 
-@app.route("/api/ask", methods=["POST"])
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/ask', methods=['POST'])
 def ask():
-    data = request.json
-    question = data.get("question", "")
-    answer = process_question(question)
-    return jsonify({"answer": answer})
+    query = request.form.get('question')
+    answer = answer_query(query)
+    return render_template('index.html', answer=answer)
 
-@app.route("/api/upload", methods=["POST"])
+@app.route('/upload', methods=['GET', 'POST'])
 def upload():
-    file = request.files.get("file")
-    if file and file.filename.endswith(".txt"):
-        save_document(file)
-        return jsonify({"message": "Document uploaded successfully."})
-    return jsonify({"error": "Invalid file type"}), 400
+    if request.method == 'POST':
+        file = request.files.get('file')
+        if file and file.filename.endswith('.txt'):
+            text = file.read().decode('utf-8')
+            process_file(text)
+            file.save(f'data/{file.filename}')  # Save original for viewing
+            return render_template('upload.html', message='File uploaded and indexed!')
+        return render_template('upload.html', message='Please upload a .txt file.')
+    return render_template('upload.html')
 
-if __name__ == "__main__":
-    app.run(debug=True)
+@app.route('/docs')
+def docs():
+    files = get_uploaded_docs()
+    return render_template('docs.html', files=files)
