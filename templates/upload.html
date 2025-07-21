@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Documents</title>
+</head>
+<body>
+    <h1>Upload Internal Documents</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Upload</button>
+    </form>
+    {% if message %}
+        <p><strong>{{ message }}</strong></p>
+    {% endif %}
+    <p><a href="/">Back to Q&A</a> | <a href="/docs">View Documents</a></p>
+</body>
+</html>

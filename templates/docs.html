@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Uploaded Documents</title>
+</head>
+<body>
+    <h1>Uploaded Internal Documents</h1>
+    {% for file in files %}
+        <h3>{{ file.name }}</h3>
+        <pre style="background-color:#f3f3f3; padding:10px;">{{ file.content }}</pre>
+        <hr>
+    {% endfor %}
+    <p><a href="/">Back to Q&A</a> | <a href="/upload">Upload More</a></p>
+</body>
+</html>
