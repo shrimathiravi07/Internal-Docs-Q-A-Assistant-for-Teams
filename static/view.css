@@ -1,0 +1,153 @@
+/* General body and page setup */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f0f4f8;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Main container to center and style the page */
+.main-container {
+ 
+    width: 90%;
+    max-width: 900px;
+    margin: 60px auto;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    transition: 0.3s ease-in-out;
+}
+
+.main-container:hover {
+    box-shadow: 0 0 35px rgba(0, 123, 255, 0.25);
+    transform: scale(1.01);
+}
+
+/* Heading + image layout */
+.header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.icon {
+    width: 50px;
+    height: 50px;
+}
+
+h1 {
+    font-size: 26px;
+    color: #2c3e50;
+}
+
+/* Documents list layout */
+.documents-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+/* Each document block/card */
+.doc-box {
+    width: 100%;
+    background: #ffffff;
+    border-left: 6px solid #007bff;
+    padding: 15px 20px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.1);
+}
+
+.doc-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+    border-left-color: #6610f2;
+}
+
+/* Preformatted content */
+pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: #f3f3f3;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    overflow-x: auto;
+}
+
+/* Buttons section at the bottom */
+.bottom-buttons {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Style for navigation and upload buttons */
+.nav-btn,
+.upload-more-btn {
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: 2px solid;
+    transition: all 0.3s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Back button */
+.nav-btn {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+.nav-btn:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Upload more button */
+.upload-more-btn {
+    background-color: #28a745;
+    color: #fff;
+    border-color: #28a745;
+}
+
+.upload-more-btn:hover {
+    background-color: #1e7e34;
+    border-color: #1e7e34;
+}
+
+/* Responsive behavior */
+@media screen and (max-width: 600px) {
+    .header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    .doc-box {
+        padding: 12px 16px;
+    }
+
+    .nav-btn,
+    .upload-more-btn {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+}
