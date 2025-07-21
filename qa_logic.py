@@ -9,9 +9,12 @@ DATA_DIR = "data"
 INDEX_DIR = "index"
 os.makedirs(DATA_DIR, exist_ok=True)
 os.makedirs(INDEX_DIR, exist_ok=True)
+from sentence_transformers import SentenceTransformer
+from transformers import pipeline
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
-qa_model = pipeline("text2text-generation", model="google/flan-t5-base")
+model = SentenceTransformer("all-MiniLM-L6-v2", device='cpu')
+qa_model = pipeline("text2text-generation", model="google/flan-t5-base", device=-1)
+
 index_file = os.path.join(INDEX_DIR, "faiss.index")
 text_data_file = os.path.join(INDEX_DIR, "texts.pkl")
 
